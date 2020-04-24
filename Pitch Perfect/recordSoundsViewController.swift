@@ -43,18 +43,21 @@ class recordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         let recordingName = "recordingVoice.wav"
         // creates an array with the path and name
         let pathArray = [dirPath, recordingName]
-        //creates an filepath  URL using the pathArray while seperating 
+        //creates an filepath  URL using the pathArray while seperating
         let filePath = URL(string: pathArray.joined(separator: "/"))
-        //
+        //creates a audio session
         let session = AVAudioSession.sharedInstance()
-        //
+        // sets the audio session category for recording and playback. as well as putitng the options to play the audio from the sessions defaults to the bult-inspeaker instead of the receiver
         try! session.setCategory(AVAudioSession.Category.playAndRecord, options: AVAudioSession.CategoryOptions.defaultToSpeaker)
-        //
+        //initializes and returns an audio recorder; provides audio recording capapbility
         try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
-        //
+        //makes this instance a delegate of audioRecorder
         audioRecorder.delegate = self
+        //enable audio-level metering; it is by default false
         audioRecorder.isMeteringEnabled = true
+        //creates an audio file and prepares the system for recording; can be called implicitly by .record()
         audioRecorder.prepareToRecord()
+        //starts recording
         audioRecorder.record()
     }
     
@@ -62,6 +65,7 @@ class recordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     @IBAction func stopRecording(_ sender: Any) {
         configureUI(recording: false)
         audioRecorder.stop()
+        //creates audio session
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
 
